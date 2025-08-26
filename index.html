@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPL - Sistema Automatizado</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f5f5f5; }
+        h1, h2 { text-align: center; margin-bottom: 5px; }
+        h1 { color: white; background-color: #c00000; padding: 10px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        h2 { color: white; background-color: #ff8c00; padding: 8px; font-size: 1.1em; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        #sync-controls { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 15px; background-color: #e3f2fd; border: 1px solid #2196f3; border-radius: 8px; margin-bottom: 20px; }
+        #syncStatus { font-weight: bold; color: #1565c0; }
+        #user-status { text-align: center; margin-bottom: 15px; font-size: 0.9em; background: white; padding: 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .user-id { color: #666; font-family: monospace; font-size: 0.8em; }
+        .user-name { color: #2c5aa0; font-weight: bold; font-size: 1.2em; margin: 5px 0; }
+        .name-setup { background: #e3f2fd; border: 2px dashed #2196f3; padding: 20px; margin: 15px 0; border-radius: 8px; text-align: center; }
+        .name-setup input { padding: 10px 15px; border: 1px solid #ddd; border-radius: 4px; font-size: 1em; margin: 0 10px; width: 200px; }
+        .name-setup button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        .name-setup button:hover { background-color: #45a049; }
+        table { width: 100%; border-collapse: collapse; border: 2px solid black; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background: white; border-radius: 8px; overflow: hidden; }
+        th, td { border: 1px solid #a0a0a0; padding: 8px; text-align: left; vertical-align: top; }
+        thead th { background-color: #fff2cc; font-weight: bold; text-align: center; border-bottom: 2px solid black; position: sticky; top: 0; z-index: 10; }
+        .header-dia { width: 100px; } .header-dayofweek { width: 25px; } .header-time { width: 120px; } .header-obs { width: 150px; }
+        tbody td { background-color: #ffffcc; }
+        .date-cell, .day-of-week { background-color: #f2f2f2; font-weight: bold; text-align: center; vertical-align: middle; }
+        .day-of-week { writing-mode: vertical-rl; transform: rotate(180deg); padding: 8px 2px; width: 25px; }
+        .slot { display: block; min-height: 20px; border-bottom: 1px solid #ccc; margin-bottom: 2px; font-size: 0.9em; padding: 4px; cursor: pointer; border-radius: 4px; transition: all 0.3s ease; position: relative; }
+        .slot.available { background-color: #e8f5e8; border: 1px dashed #4caf50; }
+        .slot.available:hover { background-color: #c8e6c9; border-style: solid; transform: scale(1.02); }
+        .slot.my-slot { background-color: #fff3e0; border: 1px solid #ff9800; color: #e65100; font-weight: 500; }
+        .slot.my-slot:hover { background-color: #ffe0b2; box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3); }
+        .slot.taken { background-color: #e3f2fd; border: 1px solid #2196f3; color: #1565c0; cursor: not-allowed; }
+        .past-date { opacity: 0.6; background-color: #eeeeee; }
+        .past-date .slot { cursor: not-allowed; background-color: #fafafa; color: #999; }
+        .transaction-hash { position: absolute; top: 1px; right: 2px; font-size: 7px; color: #999; font-family: monospace; }
+        .log-panel { position: fixed; bottom: 10px; right: 10px; background: rgba(0,0,0,0.8); color: #0f0; padding: 10px; border-radius: 8px; font-family: monospace; font-size: 10px; max-width: 350px; max-height: 150px; overflow-y: auto; z-index: 1000; opacity: 0; transition: opacity 0.5s; pointer-events: none;}
+    </style>
+</head>
+<body>
+    <h1>TPL - Sistema Automatizado</h1>
+    <h2 id="monthTitle">Programação Semanal Permanente</h2>
+    
+    <div id="sync-controls">
+        <div id="syncStatus">⚡ Conectando...</div>
+    </div>
+
+    <div id="user-status">
+        <div class="user-name" id="userName">Configurar Nome</div>
+        <div class="user-id">ID: <span id="deviceId"></span></div>
+    </div>
+
+    <div id="nameSetup" class="name-setup">
+        <p><strong>Configure seu nome para participar da programação:</strong></p>
+        <input type="text" id="nameInput" placeholder="Digite seu nome" maxlength="30">
+        <button onclick="setupUser()">Salvar Nome</button>
+    </div>
+
+    <table id="scheduleTable">
+        <thead>
+            <tr>
+                <th class="header-dia">DIA</th><th class="header-dayofweek"></th>
+                <th class="header-time">Manhã<br>7:00</th><th class="header-time">Manhã<br>9:00</th>
+                <th class="header-time">Tarde<br>14:00</th><th class="header-time">Tardinha<br>16:00</th>
+                <th class="header-time">Noite<br>18:00</th><th class="header-obs">Observações</th>
+            </tr>
+        </thead>
+        <tbody id="scheduleBody"></tbody>
+    </table>
+
+    <div class="log-panel" id="logPanel"></div>
+
+    <script>
+        // --- CONFIGURAÇÃO OBRIGATÓRIA ---
+        const GITHUB_USER = 'EliezerRosa'; // <-- MUITO IMPORTANTE: Verifique se este é seu usuário correto
+        const GITHUB_REPO = 'tpl-data';
+        // O PAT não é necessário aqui, ele só é usado pelo robô no GitHub.
+        // --- FIM DA CONFIGURAÇÃO ---
+
+        class TPLAutoSyncSystem {
+            constructor() {
+                this.deviceId = null;
+                this.userName = null;
+                this.transactions = new Map();
+                this.scheduleState = new Map();
+                this.syncInterval = null;
+                this.dbUrl = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/database.json`;
+                this.dispatchUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`;
+                this.isPublishing = false; // Controle para evitar publicações simultâneas
+
+                this.init();
+            }
+
+            async init() {
+                this.generateIdentity();
+                this.loadLocalData();
+                this.setupUI();
+                await this.startAutoSync();
+                this.log('Sistema inicializado.');
+            }
+
+            generateIdentity() {
+                let deviceId = localStorage.getItem('tpl_device_id');
+                if (!deviceId) {
+                    deviceId = this.generateHash(Date.now() + Math.random().toString());
+                    localStorage.setItem('tpl_device_id', deviceId);
+                }
+                this.deviceId = deviceId;
+                this.userName = localStorage.getItem('tpl_user_name');
+                document.getElementById('deviceId').textContent = this.deviceId.substring(0, 8);
+            }
+
+            generateHash(input) {
+                let hash = 0;
+                for (let i = 0; i < input.length; i++) {
+                    hash = ((hash << 5) - hash) + input.charCodeAt(i);
+                    hash |= 0;
+                }
+                return 'h' + Math.abs(hash).toString(36) + Math.abs(Date.now() % 1000).toString(36);
+            }
+
+            loadLocalData() {
+                const storedTransactions = JSON.parse(localStorage.getItem('tpl_transactions') || '{}');
+                for (const txId in storedTransactions) {
+                    this.transactions.set(txId, storedTransactions[txId]);
+                }
+                this.rebuildScheduleState();
+            }
+
+            saveLocalData() {
+                localStorage.setItem('tpl_transactions', JSON.stringify(Object.fromEntries(this.transactions)));
+            }
+
+            setupUI() {
+                if (this.userName) {
+                    document.getElementById('userName').textContent = this.userName;
+                    document.getElementById('nameSetup').style.display = 'none';
+                } else {
+                    document.getElementById('nameSetup').style.display = 'block';
+                }
+            }
+
+            async createTransaction(slotId, action) {
+                if (this.isPublishing) {
+                    this.log('Aguarde a publicação anterior ser concluída.', 'warn');
+                    return;
+                }
+                const data = (action === 'set') ? { name: this.userName, deviceId: this.deviceId } : null;
+                const transaction = { id: this.generateHash(slotId + action + Date.now()), timestamp: Date.now(), slotId: slotId, action: action, ownerId: this.deviceId, data: data };
+                
+                this.transactions.set(transaction.id, transaction);
+                this.rebuildScheduleState();
+                this.saveLocalData();
+                updateTableView();
+
+                await this.publishTransaction(transaction);
+            }
+
+            rebuildScheduleState() {
+                this.scheduleState.clear();
+                const sortedTransactions = Array.from(this.transactions.values()).sort((a, b) => a.timestamp - b.timestamp);
+                
+                const finalState = new Map();
+                sortedTransactions.forEach(tx => {
+                    if (tx.action === 'set') {
+                        const existingTxOnSlot = this.transactions.get(finalState.get(tx.slotId));
+                        if (!existingTxOnSlot || tx.timestamp < existingTxOnSlot.timestamp) {
+                            finalState.set(tx.slotId, tx.id);
+                        }
+                    } else if (tx.action === 'delete') {
+                        const bookingTx = this.transactions.get(finalState.get(tx.slotId));
+                        if (bookingTx && bookingTx.ownerId === tx.ownerId) {
+                            finalState.delete(tx.slotId);
+                        }
+                    }
+                });
+                this.scheduleState = finalState;
+            }
+
+            async publishTransaction(transaction) {
+                this.isPublishing = true;
+                this.log(`Publicando transação ${transaction.id.substring(0, 8)}...`, 'info');
+                try {
+                    const response = await fetch(this.dispatchUrl, {
+                        method: 'POST',
+                        mode: 'cors',
+                        headers: {
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            event_type: 'nova-transacao',
+                            client_payload: {
+                                transaction: JSON.stringify(transaction)
+                            }
+                        })
+                    });
+
+                    if (response.status === 204) {
+                        this.log(`TRANSAÇÃO ENVIADA! O robô irá processá-la em 1-2 minutos.`);
+                    } else {
+                        const errorText = await response.text();
+                        throw new Error(`Status ${response.status}: ${errorText}`);
+                    }
+                } catch (error) {
+                    this.log(`ERRO AO PUBLICAR: ${error.message}. Sua alteração está salva localmente.`, 'error');
+                } finally {
+                    this.isPublishing = false;
+                }
+            }
+
+            async fetchLatestData() {
+                this.updateSyncStatus('Sincronizando...');
+                try {
+                    const response = await fetch(`${this.dbUrl}?v=${Date.now()}`);
+                    if (!response.ok) throw new Error(`Status ${response.status}`);
+                    
+                    const remoteTransactions = await response.json();
+                    let newTxCount = 0;
+                    
+                    if (Array.isArray(remoteTransactions)) {
+                        remoteTransactions.forEach(tx => {
+                            if (tx && tx.id && !this.transactions.has(tx.id)) {
+                                this.transactions.set(tx.id, tx);
+                                newTxCount++;
+                            }
+                        });
+                    }
+
+                    if (newTxCount > 0) {
+                        this.log(`${newTxCount} novas transações sincronizadas.`);
+                        this.rebuildScheduleState();
+                        this.saveLocalData();
+                        updateTableView();
+                    }
+                    
+                    const time = new Date().toLocaleTimeString();
+                    this.updateSyncStatus(`Sincronizado às ${time}`);
+
+                } catch (error) {
+                    this.log(`ERRO DE SINCRONIZAÇÃO: ${error.message}`, 'error');
+                    this.updateSyncStatus(`Erro. Próxima tentativa em 30s.`);
+                }
+            }
+
+            async startAutoSync() {
+                await this.fetchLatestData();
+                this.syncInterval = setInterval(() => this.fetchLatestData(), 30000);
+            }
+
+            updateSyncStatus(message) { document.getElementById('syncStatus').textContent = `⚡ ${message}`; }
+            log(message, level='log') {
+                const logPanel = document.getElementById('logPanel');
+                const time = new Date().toLocaleTimeString();
+                logPanel.innerHTML += `<span style="color: ${level === 'error' ? '#f44336' : level === 'warn' ? '#ff9800' : '#4caf50'}">[${time}] ${message}</span><br>`;
+                logPanel.scrollTop = logPanel.scrollHeight;
+                console[level](`[TPL] ${message}`);
+                logPanel.style.opacity = 1;
+                logPanel.style.pointerEvents = 'auto';
+                setTimeout(() => {
+                    logPanel.style.opacity = 0;
+                    logPanel.style.pointerEvents = 'none';
+                }, 5000);
+            }
+        }
+        
+        let tplSystem = null;
+        function setupUser() {
+            const input = document.getElementById('nameInput');
+            const name = input.value.trim();
+            if (name) {
+                tplSystem.userName = name;
+                localStorage.setItem('tpl_user_name', name);
+                document.getElementById('userName').textContent = name;
+                document.getElementById('nameSetup').style.display = 'none';
+            } else {
+                alert('Por favor, digite um nome válido.');
+            }
+        }
+
+        function handleSlotClick(slot) {
+            if (!tplSystem.userName) {
+                alert('Configure seu nome para poder agendar.');
+                document.getElementById('nameInput').focus();
+                return;
+            }
+            const slotId = slot.dataset.slotId;
+            const existingTxId = tplSystem.scheduleState.get(slotId);
+            const existingTx = existingTxId ? tplSystem.transactions.get(existingTxId) : null;
+            
+            if (!existingTx) {
+                tplSystem.createTransaction(slotId, 'set');
+            } else if (existingTx.ownerId === tplSystem.deviceId) {
+                tplSystem.createTransaction(slotId, 'delete');
+            }
+        }
+
+        function generateScheduleTable() {
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            document.getElementById('monthTitle').textContent = `Programação - ${['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][today.getMonth()]} ${today.getFullYear()}`;
+            
+            const dayNames = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+            const timeSlots = ['7:00', '9:00', '14:00', '16:00', '18:00'];
+            
+            for (let i = 0; i < 30; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                
+                const dateStr = date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                const dateId = date.toISOString().split('T')[0];
+                const isPast = dateId < todayStr.split('/').reverse().join('-');
+                
+                const row = document.createElement('tr');
+                if (isPast) row.classList.add('past-date');
+                
+                row.innerHTML = `
+                    <td class="date-cell">${dateStr}</td>
+                    <td class="day-of-week">${dayNames[date.getDay()]}</td>
+                    ${timeSlots.map(time => `<td><div class="slot" data-slot-id="${dateId}-${time}"></div></td>`).join('')}
+                    <td><div class="slot" data-slot-id="${dateId}-obs"></div></td>
+                `;
+                tbody.appendChild(row);
+            }
+            tbody.querySelectorAll('.slot').forEach(slot => {
+                if (!slot.closest('.past-date')) {
+                    slot.addEventListener('click', () => handleSlotClick(slot));
+                }
+            });
+        }
+
+        function updateTableView() {
+            document.querySelectorAll('.slot[data-slot-id]').forEach(slot => {
+                const slotId = slot.dataset.slotId;
+                const txId = tplSystem.scheduleState.get(slotId);
+                const tx = txId ? tplSystem.transactions.get(txId) : null;
+                
+                slot.className = 'slot';
+                slot.textContent = '';
+                
+                const oldHash = slot.querySelector('.transaction-hash');
+                if (oldHash) oldHash.remove();
+                
+                if (tx && tx.data) {
+                    slot.textContent = tx.data.name;
+                    slot.classList.add(tx.ownerId === tplSystem.deviceId ? 'my-slot' : 'taken');
+                    slot.title = tx.ownerId === tplSystem.deviceId ? 'Seu agendamento.' : `Agendado por ${tx.data.name}`;
+                } else {
+                    slot.classList.add('available');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            tplSystem = new TPLAutoSyncSystem();
+            generateScheduleTable();
+            updateTableView();
+        });
+    </script>
+</body>
+</html>
