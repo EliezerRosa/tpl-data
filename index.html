@@ -74,8 +74,8 @@
         // --- CONFIGURAÇÃO OBRIGATÓRIA ---
         const GITHUB_USER = 'EliezerRosa';
         const GITHUB_REPO = 'tpl-data';
-        // 🔑 COLE SEU NOVO TOKEN PAT AQUI.
-        const GITHUB_PAT = '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'; // Lembre-se de usar seu NOVO token
+        // 🔑 COLE SEU NOVO E SEGURO TOKEN PAT AQUI.
+        const GITHUB_PAT = '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';
         // --- FIM DA CONFIGURAÇÃO ---
 
         class TPLAutoSyncSystem {
@@ -116,6 +116,7 @@
                 const isPast = i < todayStr;
                 const r=document.createElement("tr");
                 if(isPast) r.classList.add("past-date");
+                // **** LINHA CORRIGIDA ****
                 r.innerHTML=`<td class="date-cell">${d}</td><td class="day-of-week">${dayNames[c.getDay()]}</td>${timeSlots.map(e=>`<td><div class="slot" data-slot-id="${i}-${e}"></div></td>`).join("")}<td><div class="slot" data-slot-id="${i}-obs"></div></td>`;
                 tbody.appendChild(r)
             }
