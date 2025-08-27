@@ -1,0 +1,45 @@
+# Nome do nosso robô
+name: Update TPL Database
+
+# O "gatilho": Acorda quando recebe um sinal do tipo 'nova-transacao'
+on:
+  repository_dispatch:
+    types: [nova-transacao]
+
+# As tarefas que o robô vai executar
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    
+    # **** CORREÇÃO CRUCIAL ADICIONADA AQUI ****
+    # Dá permissão explícita para o robô ler e escrever no repositório.
+    permissions:
+      contents: write
+      
+    steps:
+      # Passo 1: Fazer o checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Usa o nosso Token PAT para garantir que o checkout tenha permissão de escrita
+          token: ${{ secrets.TPL_DATA_PAT }}
+
+      # Passo 2: Atualizar o database.json
+      - name: Update database.json
+        run: |
+          NOVA_TRANSACAO='${{ github.event.client_payload.transaction }}'
+          jq --argjson newTx "$NOVA_TRANSACAO" '. += [$newTx]' database.json > temp_db.json && mv temp_db.json database.json
+
+      # Passo 3: Fazer o commit e push da alteração
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'TPL Data Robot'
+          git config --global user.email 'actions@github.com'
+          git add database.json
+          # Só faz o commit se houver alguma mudança real no arquivo
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: Adiciona nova transação via Action"
+            git push
+          else
+            echo "Nenhuma alteração para commitar."
+          fi
