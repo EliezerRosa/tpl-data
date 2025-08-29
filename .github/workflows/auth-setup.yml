@@ -1,0 +1,38 @@
+# Arquivo 2: O Cérebro do Robô de Configuração (auth-setup.yml)
+# Propósito: Rodar uma única vez para pegar o código de autorização do admin, trocá-lo por uma chave mestra (access_token), e salvar essa chave de forma segura nos Segredos do Repositório.
+# Localização: .github/workflows/auth-setup.yml
+
+# Nome do nosso robô de configuração
+name: Setup Admin Access Token
+
+# Gatilho: Acorda quando recebe um sinal do tipo 'setup-admin-token'
+on:
+  repository_dispatch:
+    types: [setup-admin-token]
+
+jobs:
+  get-token:
+    runs-on: ubuntu-latest
+    steps:
+      # Passo 1: Troca o código de autorização pela chave mestra (access_token)
+      - name: Exchange code for token
+        id: exchange
+        run: |
+          CODE="${{ github.event.client_payload.code }}"
+          CLIENT_ID="${{ secrets.OAUTH_CLIENT_ID }}"
+          CLIENT_SECRET="${{ secrets.OAUTH_CLIENT_SECRET }}"
+          RESPONSE=$(curl -X POST -H "Accept: application/json" \
+            "https://github.com/login/oauth/access_token" \
+            -d "client_id=$CLIENT_ID" \
+            -d "client_secret=$CLIENT_SECRET" \
+            -d "code=$CODE")
+          # Guarda o token em uma variável de ambiente para o próximo passo
+          echo "ACCESS_TOKEN=$(echo $RESPONSE | jq -r .access_token)" >> $GITHUB_ENV
+
+      # Passo 2: Salva a chave mestra no cofre de segredos do repositório
+      - name: Save token as a repository secret
+        uses: hmanstr/actions-create-secret@v2.0.0
+        with:
+          name: 'APP_ACCESS_TOKEN'
+          value: ${{ env.ACCESS_TOKEN }}
+          token: ${{ secrets.ADMIN_PAT }}
