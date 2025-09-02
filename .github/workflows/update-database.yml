@@ -1,11 +1,7 @@
-# Arquivo 1: O Cérebro do Robô de Dados (update-database.yml)
-# Propósito: Receber os sinais de novos agendamentos e atualizar o database.json.
-# Localização: .github/workflows/update-database.yml
-
-# Nome do nosso robô de dados
+# Nome do nosso robô
 name: Update TPL Database
 
-# Gatilho: Acorda quando recebe um sinal do tipo 'nova-transacao'
+# O "gatilho": Acorda quando recebe um sinal do tipo 'nova-transacao'
 on:
   repository_dispatch:
     types: [nova-transacao]
@@ -14,12 +10,12 @@ jobs:
   update:
     runs-on: ubuntu-latest
 
-    # Garante que apenas uma atualização ocorra por vez
+    # Evita que várias execuções concorrentes sobrescrevam o mesmo arquivo
     concurrency:
       group: tpl-database-update
       cancel-in-progress: false
 
-    # Permissões necessárias para o robô
+    # Dá permissão explícita para o robô ler e escrever no repositório.
     permissions:
       contents: write
 
@@ -28,17 +24,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # USA A CHAVE MESTRA QUE O ROBÔ DE SETUP CRIOU!
-          token: ${{ secrets.APP_ACCESS_TOKEN }}
+          # Usa o nosso Token PAT para garantir que o checkout tenha permissão de escrita
+          token: ${{ secrets.TPL_DATA_PAT }}
 
-      # Passo 2: Garantir que o banco de dados exista
+      # Passo 2: Garantir que database.json existe
       - name: Ensure database.json exists
         run: |
           if [ ! -f database.json ]; then
             echo "[]" > database.json
           fi
 
-      # Passo 3: Adicionar a nova transação
+      # Passo 3: Atualizar o database.json com a nova transação
       - name: Update database.json
         run: |
           NOVA_TRANSACAO='${{ github.event.client_payload.transaction }}'
@@ -51,6 +47,7 @@ jobs:
           git config --global user.name 'TPL Data Robot'
           git config --global user.email 'actions@github.com'
           git add database.json
+          # Só faz o commit se houver alguma mudança real no arquivo
           if ! git diff --staged --quiet; then
             git commit -m "chore: Adiciona nova transação via Action"
             git push
