@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
+
     <title>TPL - Sistema Distribuído</title>
     <style>
         body {
@@ -300,235 +300,7 @@
             table { font-size: 0.8em; }
             .slot { min-height: 15px; padding: 2px; }
             .network-debug { display: none; }
-=======
-    <title>TPL - Sistema Automatizado</title>
-    <style>
-        body { 
-            font-family: sans-serif; 
-            margin: 20px; 
-            background-color: #f5f5f5; 
-        }
-        
-        h1, h2 { 
-            text-align: center; 
-            margin-bottom: 5px; 
-        }
-        
-        h1 { 
-            color: white; 
-            background-color: #c00000; 
-            padding: 10px; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
-        }
-        
-        h2 { 
-            color: white; 
-            background-color: #ff8c00; 
-            padding: 8px; 
-            font-size: 1.1em; 
-            margin-bottom: 20px; 
-            border-radius: 6px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2); 
-        }
-        
-        #sync-controls { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 20px; 
-            padding: 15px; 
-            background-color: #e3f2fd; 
-            border: 1px solid #2196f3; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-        }
-        
-        #syncStatus { 
-            font-weight: bold; 
-            color: #1565c0; 
-        }
-        
-        #user-status { 
-            text-align: center; 
-            margin-bottom: 15px; 
-            font-size: 0.9em; 
-            background: white; 
-            padding: 15px; 
-            border-radius: 6px; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
-        }
-        
-        .user-id { 
-            color: #666; 
-            font-family: monospace; 
-            font-size: 0.8em; 
-        }
-        
-        .user-name { 
-            color: #2c5aa0; 
-            font-weight: bold; 
-            font-size: 1.2em; 
-            margin: 5px 0; 
-        }
-        
-        .name-setup { 
-            background: #e3f2fd; 
-            border: 2px dashed #2196f3; 
-            padding: 20px; 
-            margin: 15px 0; 
-            border-radius: 8px; 
-            text-align: center; 
-        }
-        
-        .name-setup input { 
-            padding: 10px 15px; 
-            border: 1px solid #ddd; 
-            border-radius: 4px; 
-            font-size: 1em; 
-            margin: 10px; 
-            width: 300px; 
-            display: block; 
-            margin-left: auto; 
-            margin-right: auto; 
-        }
-        
-        .name-setup button { 
-            padding: 10px 20px; 
-            background-color: #4CAF50; 
-            color: white; 
-            border: none; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 1em; 
-        }
-        
-        .name-setup button:hover { 
-            background-color: #45a049; 
-        }
-        
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            border: 2px solid black; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
-            background: white; 
-            border-radius: 8px; 
-            overflow: hidden; 
-        }
-        
-        th, td { 
-            border: 1px solid #a0a0a0; 
-            padding: 8px; 
-            text-align: left; 
-            vertical-align: top; 
-        }
-        
-        thead th { 
-            background-color: #fff2cc; 
-            font-weight: bold; 
-            text-align: center; 
-            border-bottom: 2px solid black; 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-        }
-        
-        .header-dia { width: 100px; } 
-        .header-dayofweek { width: 25px; } 
-        .header-time { width: 120px; } 
-        .header-obs { width: 150px; }
-        
-        tbody td { 
-            background-color: #ffffcc; 
-        }
-        
-        .date-cell, .day-of-week { 
-            background-color: #f2f2f2; 
-            font-weight: bold; 
-            text-align: center; 
-            vertical-align: middle; 
-        }
-        
-        .day-of-week { 
-            writing-mode: vertical-rl; 
-            transform: rotate(180deg); 
-            padding: 8px 2px; 
-            width: 25px; 
-        }
-        
-        .slot { 
-            display: block; 
-            min-height: 20px; 
-            border-bottom: 1px solid #ccc; 
-            margin-bottom: 2px; 
-            font-size: 0.9em; 
-            padding: 4px; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            transition: all 0.3s ease; 
-            position: relative; 
-        }
-        
-        .slot.available { 
-            background-color: #e8f5e8; 
-            border: 1px dashed #4caf50; 
-        }
-        
-        .slot.available:hover { 
-            background-color: #c8e6c9; 
-            border-style: solid; 
-            transform: scale(1.02); 
-        }
-        
-        .slot.my-slot { 
-            background-color: #fff3e0; 
-            border: 1px solid #ff9800; 
-            color: #e65100; 
-            font-weight: 500; 
-        }
-        
-        .slot.my-slot:hover { 
-            background-color: #ffe0b2; 
-            box-shadow: 0 2px 4px rgba(255, 152, 0, 0.3); 
-        }
-        
-        .slot.taken { 
-            background-color: #e3f2fd; 
-            border: 1px solid #2196f3; 
-            color: #1565c0; 
-            cursor: not-allowed; 
-        }
-        
-        .past-date { 
-            opacity: 0.6; 
-            background-color: #eeeeee; 
-        }
-        
-        .past-date .slot { 
-            cursor: not-allowed; 
-            background-color: #fafafa; 
-            color: #999; 
-        }
-        
-        .log-panel { 
-            position: fixed; 
-            bottom: 10px; 
-            right: 10px; 
-            background: rgba(0,0,0,0.8); 
-            color: #0f0; 
-            padding: 10px; 
-            border-radius: 8px; 
-            font-family: monospace; 
-            font-size: 10px; 
-            max-width: 350px; 
-            max-height: 150px; 
-            overflow-y: auto; 
-            z-index: 1000; 
-            opacity: 0; 
-            transition: opacity 0.5s; 
-            pointer-events: none;
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
+
         }
     </style>
 </head>
@@ -549,10 +321,8 @@
             ⚡ Sync: Iniciando...
         </div>
 =======
-    <div id="sync-controls">
-        <div id="syncStatus">⚡ Conectando...</div>
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
-    </div>
+ 
+
 
     <div id="user-status">
         <div class="user-name" id="userName">Configurar Nome</div>
@@ -560,17 +330,12 @@
         <div class="network-id">Network: <span id="networkId"></span></div>
     </div>
 
-<<<<<<< HEAD
+
     <div id="nameSetup" class="name-setup" style="display: none;">
         <p><strong>Configure seu nome para ingressar na rede TPL:</strong></p>
         <input type="text" id="nameInput" placeholder="Digite seu nome" maxlength="30">
         <button onclick="joinNetwork()">Ingressar na Rede</button>
-=======
-    <div id="nameSetup" class="name-setup">
-        <p><strong>Para participar, digite seu nome (apenas na primeira vez):</strong></p>
-        <input type="text" id="nameInput" placeholder="Digite seu nome" maxlength="30">
-        <button onclick="setupUser()">Salvar e Entrar</button>
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
+
     </div>
 
     <table id="scheduleTable">
@@ -590,7 +355,7 @@
         </tbody>
     </table>
 
-<<<<<<< HEAD
+
     <button class="debug-toggle" onclick="toggleDebug()">Debug</button>
     <div class="network-debug" id="networkDebug" style="display: none;"></div>
 
@@ -644,52 +409,12 @@
                     document.getElementById('nameSetup').style.display = 'block';
                     document.getElementById('nameInput').focus();
                 }
-=======
-    <div class="log-panel" id="logPanel"></div>
 
-    <script>
-        // Configuração do repositório GitHub
-        const GITHUB_USER = 'EliezerRosa';
-        const GITHUB_REPO = 'tpl-data';
-        const GITHUB_PAT = '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'; // 🔑 Cole seu token aqui
-
-        class TPLAutoSyncSystem {
-            constructor() {
-                this.deviceId = null;
-                this.userName = null;
-                this.transactions = new Map();
-                this.scheduleState = new Map();
-                this.syncInterval = null;
-                this.dbUrl = `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/database.json`;
-                this.dispatchUrl = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/dispatches`;
-                this.isPublishing = false;
-                this.init();
-            }
-
-            async init() {
-                this.generateIdentity();
-                this.loadLocalData();
-                this.setupUI();
-                await this.startAutoSync();
-                this.log('Sistema inicializado.');
-            }
-
-            generateIdentity() {
-                let deviceId = localStorage.getItem('tpl_device_id');
-                if (!deviceId) {
-                    deviceId = this.generateHash(Date.now() + Math.random().toString());
-                    localStorage.setItem('tpl_device_id', deviceId);
-                }
-                this.deviceId = deviceId;
-                this.userName = localStorage.getItem('tpl_user_name');
-                document.getElementById('deviceId').textContent = this.deviceId.substring(0, 8);
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
-            }
 
             generateHash(input) {
                 let hash = 0;
                 for (let i = 0; i < input.length; i++) {
-<<<<<<< HEAD
+
                     const char = input.charCodeAt(i);
                     hash = ((hash << 5) - hash) + char;
                     hash = hash & hash; // Convert to 32-bit integer
@@ -1022,209 +747,13 @@
             } else {
                 alert('Por favor, digite um nome válido.');
                 input.focus();
-=======
-                    hash = (hash << 5) - hash + input.charCodeAt(i);
-                    hash |= 0;
-                }
-                return "h" + Math.abs(hash).toString(36) + Math.abs(Date.now() % 1000).toString(36);
-            }
 
-            loadLocalData() {
-                const storedTransactions = JSON.parse(localStorage.getItem("tpl_transactions") || "{}");
-                for (const id in storedTransactions) {
-                    this.transactions.set(id, storedTransactions[id]);
-                }
-                this.rebuildScheduleState();
-            }
-
-            saveLocalData() {
-                localStorage.setItem("tpl_transactions", JSON.stringify(Object.fromEntries(this.transactions)));
-            }
-
-            setupUI() {
-                if (this.userName) {
-                    document.getElementById("userName").textContent = this.userName;
-                    document.getElementById("nameSetup").style.display = "none";
-                } else {
-                    document.getElementById("nameSetup").style.display = "block";
-                    document.getElementById("nameInput").value = this.userName || "";
-                }
-            }
-
-            async createTransaction(slotId, action) {
-                if (!this.userName) {
-                    this.log('ERRO: Configure seu nome primeiro.', 'error');
-                    document.getElementById('nameSetup').style.display = 'block';
-                    return;
-                }
-
-                if (this.isPublishing) {
-                    this.log('Aguarde a publicação anterior ser concluída.', 'warn');
-                    return;
-                }
-
-                const data = (action === 'set') ? { name: this.userName, deviceId: this.deviceId } : null;
-                const transaction = {
-                    id: this.generateHash(slotId + action + Date.now()),
-                    timestamp: Date.now(),
-                    slotId: slotId,
-                    action: action,
-                    ownerId: this.deviceId,
-                    data: data
-                };
-
-                this.transactions.set(transaction.id, transaction);
-                this.rebuildScheduleState();
-                this.saveLocalData();
-                updateTableView();
-                await this.publishTransaction(transaction);
-            }
-
-rebuildScheduleState() {
-    this.scheduleState.clear();
-    // 1. Ordena todas as transações por data, garantindo a ordem cronológica.
-    const sortedTransactions = Array.from(this.transactions.values()).sort((a, b) => a.timestamp - b.timestamp);
-    const finalState = new Map();
-
-    // 2. Reconstrói o estado final do zero, aplicando cada transação na ordem correta.
-    sortedTransactions.forEach(tx => {
-        if (tx.action === 'set') {
-            // Se o slot ainda não foi pego, este agendamento (que é o mais antigo) vence.
-            if (!finalState.has(tx.slotId)) {
-                finalState.set(tx.slotId, tx.id);
-            }
-        } else if (tx.action === 'delete') {
-            // Se houver um agendamento para este slot...
-            const bookingTxId = finalState.get(tx.slotId);
-            if (bookingTxId) {
-                const bookingTx = this.transactions.get(bookingTxId);
-                // ...e a pessoa que está deletando é a dona do agendamento, remove.
-                if (bookingTx && bookingTx.ownerId === tx.ownerId) {
-                    finalState.delete(tx.slotId);
-                }
-            }
-        }
-    });
-
-    this.scheduleState = finalState;
-}
-            async publishTransaction(transaction) {
-                this.isPublishing = true;
-                this.log(`Publicando transação ${transaction.id.substring(0, 8)}...`, 'info');
-                
-                try {
-                    const response = await fetch(this.dispatchUrl, {
-                        method: 'POST',
-                        mode: 'cors',
-                        headers: {
-                            'Accept': 'application/vnd.github.v3+json',
-                            'Content-Type': 'application/json',
-                            'Authorization': `token ${GITHUB_PAT}`
-                        },
-                        body: JSON.stringify({
-                            event_type: 'nova-transacao',
-                            client_payload: {
-                                transaction: JSON.stringify(transaction)
-                            }
-                        })
-                    });
-
-                    if (response.status === 204) {
-                        this.log(`TRANSAÇÃO ENVIADA! O robô irá processá-la.`);
-                    } else {
-                        const errorText = await response.text();
-                        throw new Error(`Status ${response.status}: ${errorText}`);
-                    }
-                } catch (error) {
-                    this.log(`ERRO AO PUBLICAR: ${error.message}.`, 'error');
-                } finally {
-                    this.isPublishing = false;
-                }
-            }
-
-            async fetchLatestData() {
-                this.updateSyncStatus("Sincronizando...");
-                
-                try {
-                    const response = await fetch(`${this.dbUrl}?v=${Date.now()}`);
-                    if (!response.ok) {
-                        throw new Error(`Status ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    let newTransactionsCount = 0;
-
-                    if (Array.isArray(data)) {
-                        data.forEach(transaction => {
-                            if (transaction && transaction.id && !this.transactions.has(transaction.id)) {
-                                this.transactions.set(transaction.id, transaction);
-                                newTransactionsCount++;
-                            }
-                        });
-                    }
-
-                    if (newTransactionsCount > 0) {
-                        this.log(`${newTransactionsCount} novas transações sincronizadas.`);
-                        this.rebuildScheduleState();
-                        this.saveLocalData();
-                        updateTableView();
-                    }
-
-                    const currentTime = new Date().toLocaleTimeString();
-                    this.updateSyncStatus(`Sincronizado às ${currentTime}`);
-                } catch (error) {
-                    this.log(`ERRO DE SINCRONIZAÇÃO: ${error.message}`, "error");
-                    this.updateSyncStatus("Erro. Próxima tentativa em 30s.");
-                }
-            }
-
-            async startAutoSync() {
-                await this.fetchLatestData();
-                this.syncInterval = setInterval(() => this.fetchLatestData(), 30000);
-            }
-
-            updateSyncStatus(message) {
-                document.getElementById('syncStatus').textContent = `⚡ ${message}`;
-            }
-
-            log(message, type = "log") {
-                const logPanel = document.getElementById("logPanel");
-                const timestamp = new Date().toLocaleTimeString();
-                const color = type === "error" ? "#f44336" : type === "warn" ? "#ff9800" : "#4caf50";
-                
-                logPanel.innerHTML += `<span style="color: ${color}">[${timestamp}] ${message}</span><br>`;
-                logPanel.scrollTop = logPanel.scrollHeight;
-                console[type](`[TPL] ${message}`);
-                
-                logPanel.style.opacity = 1;
-                logPanel.style.pointerEvents = "auto";
-                
-                setTimeout(() => {
-                    logPanel.style.opacity = 0;
-                    logPanel.style.pointerEvents = "none";
-                }, 5000);
-            }
-        }
-
-        let tplSystem = null;
-
-        function setupUser() {
-            const name = document.getElementById('nameInput').value.trim();
-            
-            if (name) {
-                tplSystem.userName = name;
-                localStorage.setItem('tpl_user_name', name);
-                tplSystem.setupUI();
-                tplSystem.log('Nome configurado com sucesso!', 'info');
-            } else {
-                alert('Por favor, digite seu nome.');
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
             }
         }
 
         function handleSlotClick(slot) {
             if (!tplSystem.userName) {
-<<<<<<< HEAD
+
                 alert('Configure seu nome primeiro.');
                 return;
             }
@@ -1245,30 +774,12 @@ rebuildScheduleState() {
                 // Criar transação para remover slot
                 tplSystem.createTransaction(slotId, 'delete');
             }
-=======
-                alert("Configure seu nome para poder agendar.");
-                document.getElementById("nameSetup").style.display = "block";
-                return;
-            }
 
-            const slotId = slot.dataset.slotId;
-            const existingTransactionId = tplSystem.scheduleState.get(slotId);
-            const existingTransaction = existingTransactionId ? tplSystem.transactions.get(existingTransactionId) : null;
-
-            if (existingTransaction && existingTransaction.ownerId === tplSystem.deviceId) {
-                // Cancelar meu agendamento
-                tplSystem.createTransaction(slotId, "delete");
-            } else if (!existingTransaction) {
-                // Fazer novo agendamento
-                tplSystem.createTransaction(slotId, "set");
-            }
-            // Se já está ocupado por outro, não faz nada
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
         }
 
         function generateScheduleTable() {
             const tbody = document.getElementById('scheduleBody');
-<<<<<<< HEAD
+
             const today = new Date();
             const monthTitle = document.getElementById('monthTitle');
             
@@ -1280,27 +791,13 @@ rebuildScheduleState() {
             
             const dayNames = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
             const timeSlots = ['7:00', '9:00', '14:00', '16:00', '18:00'];
-=======
-            if (!tbody) return;
-            
-            tbody.innerHTML = "";
-            const today = new Date();
-            const todayStr = today.toISOString().split("T")[0];
-            
-            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                              "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-            document.getElementById("monthTitle").textContent = 
-                `Programação - ${monthNames[today.getMonth()]} ${today.getFullYear()}`;
-            
-            const dayNames = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
-            const timeSlots = ["7:00", "9:00", "14:00", "16:00", "18:00"];
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
+
             
             for (let i = 0; i < 30; i++) {
                 const date = new Date(today);
                 date.setDate(today.getDate() + i);
                 
-<<<<<<< HEAD
+
                 const dayOfWeek = date.getDay();
                 const dateStr = date.toLocaleDateString('pt-BR');
                 const isPast = date < today;
@@ -1392,69 +889,7 @@ rebuildScheduleState() {
                 }
             });
         }
-=======
-                const dateStr = date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
-                const isoDate = date.toISOString().split("T")[0];
-                const isPast = isoDate < todayStr;
-                
-                const row = document.createElement("tr");
-                if (isPast) {
-                    row.classList.add("past-date");
-                }
-                
-                const timeCells = timeSlots.map(time => 
-                    `<td><div class="slot" data-slot-id="${isoDate}-${time}"></div></td>`
-                ).join("");
-                
-                row.innerHTML = 
-                    `<td class="date-cell">${dateStr}</td>` +
-                    `<td class="day-of-week">${dayNames[date.getDay()]}</td>` +
-                    timeCells +
-                    `<td><div class="slot" data-slot-id="${isoDate}-obs"></div></td>`;
-                
-                tbody.appendChild(row);
-            }
-            
-            // Adicionar event listeners
-            tbody.querySelectorAll(".slot").forEach(slot => {
-                if (!slot.closest(".past-date")) {
-                    slot.addEventListener("click", () => handleSlotClick(slot));
-                }
-            });
-        }
 
-        function updateTableView() {
-            document.querySelectorAll(".slot[data-slot-id]").forEach(slot => {
-                const slotId = slot.dataset.slotId;
-                const transactionId = tplSystem.scheduleState.get(slotId);
-                const transaction = transactionId ? tplSystem.transactions.get(transactionId) : null;
-                
-                // Reset classes
-                slot.className = "slot";
-                slot.textContent = "";
-                
-                if (transaction && transaction.data) {
-                    slot.textContent = transaction.data.name;
-                    if (transaction.ownerId === tplSystem.deviceId) {
-                        slot.classList.add("my-slot");
-                        slot.title = "Seu agendamento.";
-                    } else {
-                        slot.classList.add("taken");
-                        slot.title = `Agendado por ${transaction.data.name}`;
-                    }
-                } else {
-                    slot.classList.add("available");
-                }
-            });
-        }
-
-        // Inicialização quando a página carrega
-        document.addEventListener('DOMContentLoaded', () => {
-            generateScheduleTable();
-            tplSystem = new TPLAutoSyncSystem();
-            updateTableView();
-        });
->>>>>>> parent of 2ceb6d6 (build: Implementa arquitetura final com backend seguro de OAuth)
     </script>
 </body>
 </html>
